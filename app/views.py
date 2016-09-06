@@ -1,6 +1,7 @@
 from app import app
 
 import json
+from flask import request
 
 @app.route('/')
 def homepage():
@@ -8,6 +9,8 @@ def homepage():
 
 @app.route('/register',methods=['POST'])
 def register():
+    d=json.loads(request.data.decode('utf-8'))
+    print(d['Hello'])
     return json.dumps(
 	    {
 	        "status": "OK"
@@ -16,6 +19,7 @@ def register():
 
 @app.route('/passenger',methods=['POST'])
 def passenger():
+    
     return json.dumps(
 	    {
 	        "status": "OK"
