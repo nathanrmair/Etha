@@ -6,6 +6,29 @@ import json
 def homepage():
     return 'Hello world'
 
-@app.route('/register')
-def homepage2():
-    return json.dumps(["status":"OK"])
+@app.route('/register',methods=['POST'])
+def register():
+    return json.dumps(
+	    {
+	        "status": "OK"
+	    }
+    )
+
+@app.route('/passenger',methods=['POST'])
+def passenger():
+    return json.dumps(
+	    {
+	        "status": "OK"
+	    }
+    )
+
+@app.route('/update',methods=['POST'])
+def update():
+    return json.dumps(
+	    {
+	        "status": "OK"
+	    }
+    )
+
+
+
