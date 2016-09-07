@@ -4,8 +4,10 @@ from models import Driver, Passenger
 import json
 import math
 from flask import request
+from oauth2client import client, crypt
 
 DEGREES_TO_RADIANS = math.pi/180.0
+CLIENT_ID = 'CHANGE ME'
 
 @app.route('/')
 def homepage():
@@ -59,3 +61,17 @@ def distance_on_unit_sphere(lat1, long1, lat2, long2):
 
         return arc * 6373 # Times 6373 for km
 
+def get_user_from_token(token):
+    try:
+        #TODO enable token authorization
+        #idinfo = verify_id_token(token, CLIENT_ID)
+        driver = Driver.query.filter_by(token=token).first()
+        if driver:
+            return driver
+        else:
+            driver = Driver(token)
+            db.session.add(driver)
+            db.session.commit()
+            return driver
+    except crypt.AppIdentityError:
+        return None
