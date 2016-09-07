@@ -36,9 +36,11 @@ def passenger():
 
 @app.route('/update',methods=['POST'])
 def update():
+    d=json.loads(request.data.decode('utf-8'))
+    src = (d['src']['lat'],d['src']['lng'])
     passengers = Passenger.query.all()
     passengers_list = [x for x in passengers
-            if distance_on_unit_sphere(x.src_lat,x.src_long,x.dest_lat,x.dest_long) < 10]
+            if distance_on_unit_sphere(x.src_lat,x.src_long,src[0],src[1]) < 10]
     y = [{'src_lat': x.src_lat, 'src_long': x.src_long, 'dest_lat': x.dest_lat, 'dest_long': x.dest_long}
             for x in passengers_list]
     return json.dumps(y)
