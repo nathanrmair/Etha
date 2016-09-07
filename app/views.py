@@ -10,11 +10,9 @@ def homepage():
 @app.route('/register',methods=['POST'])
 def register():
     d=json.loads(request.data.decode('utf-8'))
-    print(d['Hello'])
+    auth_token = d['auth_token']
     return json.dumps(
-	    {
-	        "status": "OK"
-	    }
+        auth_token
     )
 
 @app.route('/passenger',methods=['POST'])
