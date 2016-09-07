@@ -9,25 +9,21 @@ from oauth2client import client, crypt
 DEGREES_TO_RADIANS = math.pi/180.0
 CLIENT_ID = 'CHANGE ME'
 
-@app.route('/')
-def homepage():
-    return 'Hello world'
-
-@app.route('/register',methods=['POST'])
+@app.route('/register', methods=['POST'])
 def register():
-    d=json.loads(request.data.decode('utf-8'))
-    auth_token = d['auth_token']
+    details = json.loads(request.data.decode('utf-8'))
+    auth_token = details['auth_token']
     return json.dumps(
         auth_token
     )
 
 @app.route('/passenger',methods=['POST'])
 def passenger():
-    d=json.loads(request.data.decode('utf-8'))
-    dest = (d['dest']['lat'], d['dest']['lng'])
-    src = (d['src']['lat'],d['src']['lng'])
-    p = Passenger(src[0],src[1],
-            dest[0],dest[1])
+    details = json.loads(request.data.decode('utf-8'))
+    dest = (details['dest']['lat'], details['dest']['lng'])
+    src = (details['src']['lat'], details['src']['lng'])
+    p = Passenger(src[0], src[1],
+            dest[0], dest[1])
     db.session.add(p)
     db.session.commit()
     return json.dumps(
@@ -38,11 +34,11 @@ def passenger():
 
 @app.route('/update',methods=['POST'])
 def update():
-    d=json.loads(request.data.decode('utf-8'))
-    src = (d['src']['lat'],d['src']['lng'])
+    details = json.loads(request.data.decode('utf-8'))
+    src = (details['src']['lat'], details['src']['lng'])
     passengers = Passenger.query.all()
     passengers_list = [x for x in passengers
-            if distance_on_unit_sphere(x.src_lat,x.src_long,src[0],src[1]) < 10]
+            if distance_on_unit_sphere(x.src_lat, x.src_long, src[0], src[1]) < 10]
     y = [{'src_lat': x.src_lat, 'src_long': x.src_long, 'dest_lat': x.dest_lat, 'dest_long': x.dest_long}
             for x in passengers_list]
     return json.dumps(y)
