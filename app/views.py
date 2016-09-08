@@ -3,6 +3,7 @@ from models import Driver, Passenger
 
 import json
 import math
+import datetime
 from flask import request
 from oauth2client import client, crypt
 
@@ -34,9 +35,11 @@ def passenger():
 
 @app.route('/update',methods=['POST'])
 def update():
+    now = datetime.datetime.now() - datetime.timedelta(minutes = 30)
     details = json.loads(request.data.decode('utf-8'))
     src = (details['src']['lat'], details['src']['lng'])
     passengers = Passenger.query.all()
+    passengers = filter(lambda x: now < x.datetime, passengers)
     passengers_list = [x for x in passengers
             if distance_on_unit_sphere(x.src_lat, x.src_long, src[0], src[1]) < 10]
     y = [{'src_lat': x.src_lat, 'src_long': x.src_long, 'dest_lat': x.dest_lat, 'dest_long': x.dest_long}
